@@ -1,2 +1,2 @@
 # grordle
-Greek World
+Greek Wordle
