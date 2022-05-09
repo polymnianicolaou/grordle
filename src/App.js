@@ -17,63 +17,83 @@ const classes = {
   }
 };
 
+//TODO: RANDOM SELECT WORD FROM LIBRARY
+const key_word = ['A','P','P','L','E'];
+
 
 class InnerGrid extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      idx0 : '',
-      idx1 : '',
-      idx2 : '',
-      idx3 : '',
-      idx4 : ''
-     }; 
+ 
+    state = {
+      chars : [
+        '',
+        '',
+        '',
+        '',
+        ''
+      ]
+    }; 
+
+  onChange = (new_char, index) => {
+    if (index === -1) {
+      // handle error
+    } else {
+      this.setState({
+        chars: [
+          ...this.state.chars.slice(0,index),
+          new_char,
+          ...this.state.chars.slice(index+1)
+        ]
+      }, () => console.log('status updated: ', this.status));
+    }
   }
 
-  onChange = (event) => {
-    const { idx, value } = event.target;
-    this.setState({[idx] : value});
-    console.log('change', value)
-  }
-
-  //user hits enter when in the last column
   onKeyPress = (event) => {
     if (event.key === 'Enter') {
       console.log('Enter key pressed');
-      // write functionality here
+      
       //compare...
+      
+      //get characters from state into an array to loop through and compare each char to the correct word
+      var guess_word = [...this.state.chars]
+
+      // console.log(guess_word)
+       for (let i = 0; i < guess_word.length; i++) {
+          //TODO: WHEN USER ENTERS LOWERCASE, IT'S DISPLAYED UPPERCASE BUT STORED AS LOWERCASE THEREFORE INCORRECT
+          //TODO: IMPLEMENT FOR GREEK CHARACTERS
+          
+          if (guess_word[i] === key_word[i]){
+            console.log('CORRECT', guess_word[i])
+            //TODO: Mark tile green
+          }else if (key_word.includes(guess_word[i])){
+            console.log('CORRECT WRONG SPOT', guess_word[i])
+            //TODO: Mark tile yellow
+          }else {
+            console.log('INCORRECT', guess_word[i])
+            //TODO: Mark tile grey
+          }
+
+      } 
     }
   }
+
   render() {
       return(
       <Grid container >
-      <TextField  style={classes.paper} idx="idx0" onChange={this.onChange}
-        inputProps={{ 
-          maxLength: 1 , 
-          style: { textTransform: "uppercase" } }} ></TextField>
-      <TextField  style={classes.paper} idx="idx1" onChange={this.onChange}
-        inputProps={{ 
-          maxLength: 1 , 
-          style: { textTransform: "uppercase" } }}></TextField>
-      <TextField  style={classes.paper} idx="idx2" onChange={this.onChange}
-        inputProps={{ 
-          maxLength: 1 , 
-          style: { textTransform: "uppercase" } }}></TextField>
-      <TextField  style={classes.paper} idx="idx3" onChange={this.onChange}
-        inputProps={{ 
-          maxLength: 1 , 
-          style: { textTransform: "uppercase" } }}></TextField>
-      <TextField  style={classes.paper} idx="idx4" onChange={this.onChange}
-        inputProps={{ 
-          maxLength: 1 , 
-          style: { textTransform: "uppercase" } }}
-          onKeyPress= {this.onKeyPress}></TextField>
-  </Grid>
+        {this.state.chars.map(( char, index ) => {
+          return (
+            <TextField  key={index} onChange={(e) => this.onChange(e.target.value, index)}
+            inputProps={{ 
+              maxLength: 1 , 
+              style: { textTransform: "uppercase" } }}
+              onKeyPress= {this.onKeyPress}></TextField>
+          )
+
+        })}
+      </Grid>
     );
     }
 }
 
-// //the InnerGrid component will be a collection of multiple Grid items
  function NestedGrid() {
   return(
     <div style={classes.root}>
@@ -93,3 +113,26 @@ class InnerGrid extends Component {
 export default NestedGrid;
 
 
+{/* <Grid container >
+<TextField  style={classes.paper} idx="idx0" onChange={this.onChange}
+  inputProps={{ 
+    maxLength: 1 , 
+    style: { textTransform: "uppercase" } }} ></TextField>
+<TextField  style={classes.paper} idx="idx1" onChange={this.onChange}
+  inputProps={{ 
+    maxLength: 1 , 
+    style: { textTransform: "uppercase" } }}></TextField>
+<TextField  style={classes.paper} idx="idx2" onChange={this.onChange}
+  inputProps={{ 
+    maxLength: 1 , 
+    style: { textTransform: "uppercase" } }}></TextField>
+<TextField  style={classes.paper} idx="idx3" onChange={this.onChange}
+  inputProps={{ 
+    maxLength: 1 , 
+    style: { textTransform: "uppercase" } }}></TextField>
+<TextField  style={classes.paper} idx="idx4" onChange={this.onChange}
+  inputProps={{ 
+    maxLength: 1 , 
+    style: { textTransform: "uppercase" } }}
+    onKeyPress= {this.onKeyPress}></TextField>
+</Grid> */}
